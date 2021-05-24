@@ -1,36 +1,59 @@
 import "./index.scss";
 import List from "./components/List";
 import AddListButton from "./components/AddListButton";
-import DB from "./assets/db.json";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ToDoList from "./components/ToDoList";
+import axios from "axios";
 
 function App() {
-  const [selectedTask, setSelectTask] = useState("NameTask");
-  const [listItem, setListItem] = useState(
-    DB.lists.map((item) => {
-      item.color = DB.colors.filter(
-        (color) => color.id === item.colorId,
-      )[0].name;
-      return item;
-    }),
-  );
+  const [selectedTask, setSelectTask] = useState(null);
+  const [listItem, setListItem] = useState(null);
+  const [colorItem, setColorItem] = useState(null);
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/lists?_expand=color&_embed=tasks")
+      .then(({ data }) => {
+        setListItem(data);
+      });
+    axios.get("http://localhost:3001/colors").then(({ data }) => {
+      setColorItem(data);
+    });
+  }, []);
   const addTask = (obj) => {
     const updateList = [...listItem, obj];
     setListItem(updateList);
   };
   const del = (idx) => {
-    const newList = listItem.filter((item) => item.id !== idx.id);
+    const newList = listItem.filter((item) => item.id !== idx);
     setListItem(newList);
   };
-  const setTask = (id) => {
-    setSelectTask(id.name);
+  const selectedTaskItem = (itm) => {
+    setSelectTask(itm);
   };
+  const editedTitle = (idx, title) => {
+    const updateList = listItem.map((item) => {
+      if (item.id === idx) {
+        item.name = title;
+      }
+      return item;
+    });
+    setListItem(updateList);
+  };
+
+const newTaskItem =(obj)=>{
+  const newListItem = listItem.map(item=>{
+    if(item.id === obj.listId){
+      item.tasks = [...item.tasks, obj]
+    } 
+    return item
+  })
+setListItem(newListItem)
+}
+
   return (
     <div className="todo">
       <div className="todo__sidebar">
         <List
-          selectTask={setTask}
           items={[
             {
               icon: (
@@ -51,11 +74,23 @@ function App() {
             },
           ]}
         />
-        <List selectTask={setTask} remove={del} items={listItem} isRemovable />
-        <AddListButton   selectTask={setTask} addItem={addTask} list={listItem} colors={DB.colors} />
+        {listItem ? (
+          <List
+            selectTask={selectedTaskItem}
+            selectedTask={selectedTask}
+            remove={del}
+            items={listItem}
+            isRemovable
+          />
+        ) : (
+          "...loading"
+        )}
+        <AddListButton addItem={addTask} list={listItem} colors={colorItem} />
       </div>
       <div className="todo__tasks">
-        <ToDoList name={selectedTask} />
+        {selectedTask && (
+          <ToDoList newTaskItem={newTaskItem} list={selectedTask} editTitle={editedTitle} />
+        )}
       </div>
     </div>
   );

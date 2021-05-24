@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from 'axios'
+
 import List from "../List";
 import "./AddListPopup.scss";
 import Badge from "../Badge";
@@ -7,19 +9,31 @@ import closeImg from "../../assets/icons/close.svg";
 
 function AddListButton({ colors, addItem, removeItem }) {
   const [visible, setVisible] = useState(false);
-  const [selectedColor, selectColor] = useState(colors[0].id);
+  const [selectedColor, selectColor] = useState(3);
   const [inputValue, setInputValue] = useState("");
 
-   
+  useEffect(()=>{
+    if(Array.isArray(colors)){
+      selectColor(colors[0].id)
+    }
+  },[colors])
+
   const addItemTask = () => {
-    const color =  colors.filter(c => c.id === selectedColor)[0].name
-    addItem({
-      "id": Math.random()*10,
-      "name": inputValue ,
-      colorId: selectedColor,
-      color
+   
+    axios.post('http://localhost:3001/lists',{
+      name: inputValue,
+      colorId: selectedColor
+    }).then(({data})=>{
+      const color =  colors.filter(c => c.id === selectedColor)[0].name
+      const objList = {
+        ...data, color: {name:color}
+      }
+      addItem(objList)
+      setVisible(false)
     })
-    setVisible(false)
+
+    
+   
   } 
 
   const click = () => {

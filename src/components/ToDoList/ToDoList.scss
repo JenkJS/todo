@@ -25,9 +25,77 @@
         }
     }
 
+    &__form{
+        margin-top: 20px;
+        margin-left: 14px;
+
+        &-field{
+            .button{
+                margin-right: 15px;
+                margin-top: 15px;
+            }
+                
+                    }
+    
+        
+        &-new{
+            width: 134px;
+            height: 30px;
+            color: #B2B2B2;
+            cursor: pointer;
+            opacity: .6;
+            display: flex;
+            align-items: center;
+            
+
+            
+            &:hover{
+                opacity: 1;
+                color: #000;
+                transition: opacity 0.15s ease-in-out;
+                background: #E8E8E8;
+                box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.04);
+                border-radius: 4px;
+            }
+        }
+
+        img{
+            width: 14px;
+            height: 14px;
+            margin-left: 4px;
+        }
+
+        span{
+            margin-left: 19px;
+            font-size: 16px;
+            width: 101px;   
+            height: 19px;
+            font-family: Lato;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 19px;
+            letter-spacing: 0.15px;
+
+color: #B4B4B4;
+        }
+
+    }
+
     &__list {
         margin-top: 30px;
-        margin-bottom: 20px;
+
+        h2 {
+            font-family: Montserrat;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 32px;
+            line-height: 39px;
+            color: #C9D1D3;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
 
     }
 
@@ -35,6 +103,7 @@
         display: flex;
         align-items: center;
         margin-left: 15px;
+        margin-bottom: 20px;
 
         input {
             margin-left: 15px;
@@ -76,6 +145,7 @@
 
                 svg {
                     opacity: 1;
+
                     path {
                         stroke: #fff;
                     }
@@ -83,4 +153,5 @@
             }
         }
     }
+    
 }
