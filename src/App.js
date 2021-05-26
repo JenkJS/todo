@@ -4,21 +4,29 @@ import AddListButton from "./components/AddListButton";
 import { useState, useEffect } from "react";
 import ToDoList from "./components/ToDoList";
 import axios from "axios";
+import { Route, useHistory, useLocation } from "react-router-dom";
 
 function App() {
   const [selectedTask, setSelectTask] = useState(null);
   const [listItem, setListItem] = useState(null);
   const [colorItem, setColorItem] = useState(null);
+  let history = useHistory();
+  let location = useLocation();
+
   useEffect(() => {
     axios
       .get("http://localhost:3001/lists?_expand=color&_embed=tasks")
       .then(({ data }) => {
         setListItem(data);
+      })
+      .catch(() => {
+        alert("Errr");
       });
     axios.get("http://localhost:3001/colors").then(({ data }) => {
       setColorItem(data);
     });
   }, []);
+
   const addTask = (obj) => {
     const updateList = [...listItem, obj];
     setListItem(updateList);
@@ -26,9 +34,6 @@ function App() {
   const del = (idx) => {
     const newList = listItem.filter((item) => item.id !== idx);
     setListItem(newList);
-  };
-  const selectedTaskItem = (itm) => {
-    setSelectTask(itm);
   };
   const editedTitle = (idx, title) => {
     const updateList = listItem.map((item) => {
@@ -39,23 +44,49 @@ function App() {
     });
     setListItem(updateList);
   };
+  const removeTask = (listId, taskId) => {
+    if (window.confirm("Are you you want to delete the selected task?")) {
+      const updateList = listItem.map((item) => {
+        if (item.id === listId) {
+          item.tasks = item.tasks.filter((task) => task.id !== taskId);
+        }
+        return item;
+      });
+      setListItem(updateList);
+      axios.delete('http://localhost:3001/tasks/' + taskId).catch(()=>(
+        alert('Err')
+      ))
+    }
+  };
 
-const newTaskItem =(obj)=>{
-  const newListItem = listItem.map(item=>{
-    if(item.id === obj.listId){
-      item.tasks = [...item.tasks, obj]
-    } 
-    return item
-  })
-setListItem(newListItem)
-}
+  const newTaskItem = (obj) => {
+    const newListItem = listItem.map((item) => {
+      if (item.id === obj.listId) {
+        item.tasks = [...item.tasks, obj];
+      }
+      return item;
+    });
+    setListItem(newListItem);
+  };
+
+  useEffect(() => {
+    const listId = history.location.pathname.split("lists/")[1];
+    if (listItem) {
+      const list = listItem.find((list) => list.id === Number(listId));
+      setSelectTask(list);
+    }
+  }, [listItem, history.location.pathname]);
 
   return (
     <div className="todo">
       <div className="todo__sidebar">
         <List
+          selectTask={(itm) => {
+            history.push(`/`);
+          }}
           items={[
             {
+              active: history.location.pathname === "/",
               icon: (
                 <svg
                   width="14"
@@ -71,12 +102,16 @@ setListItem(newListItem)
                 </svg>
               ),
               name: "All Task",
+              // active: true,
             },
           ]}
         />
         {listItem ? (
           <List
-            selectTask={selectedTaskItem}
+            selectTask={(itm) => {
+              history.push(`/lists/${itm.id}`);
+              // console.log(itm)
+            }}
             selectedTask={selectedTask}
             remove={del}
             items={listItem}
@@ -88,9 +123,29 @@ setListItem(newListItem)
         <AddListButton addItem={addTask} list={listItem} colors={colorItem} />
       </div>
       <div className="todo__tasks">
-        {selectedTask && (
-          <ToDoList newTaskItem={newTaskItem} list={selectedTask} editTitle={editedTitle} />
-        )}
+        <Route exact path="/">
+          {listItem &&
+            listItem.map((items) => (
+              <ToDoList
+                key={items.id}
+                removeTask={removeTask}
+                newTaskItem={newTaskItem}
+                list={items}
+                editTitle={editedTitle}
+                isEmpty
+              />
+            ))}
+        </Route>
+        <Route path="/lists/:id">
+          {selectedTask && (
+            <ToDoList
+              removeTask={removeTask}
+              newTaskItem={newTaskItem}
+              list={selectedTask}
+              editTitle={editedTitle}
+            />
+          )}
+        </Route>
       </div>
     </div>
   );
