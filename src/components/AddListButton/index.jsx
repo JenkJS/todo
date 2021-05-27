@@ -7,7 +7,7 @@ import Badge from "../Badge";
 
 import closeImg from "../../assets/icons/close.svg";
 
-function AddListButton({ colors, addItem, removeItem }) {
+function AddListButton({ colors, addItem }) {
   const [visible, setVisible] = useState(false);
   const [selectedColor, selectColor] = useState(3);
   const [inputValue, setInputValue] = useState("");
@@ -24,9 +24,9 @@ function AddListButton({ colors, addItem, removeItem }) {
       name: inputValue,
       colorId: selectedColor
     }).then(({data})=>{
-      const color =  colors.filter(c => c.id === selectedColor)[0].name
+      const color =  colors.filter(c => c.id === selectedColor)[0]
       const objList = {
-        ...data, color: {name:color}
+        ...data, color, tasks: []
       }
       addItem(objList)
       setVisible(false)

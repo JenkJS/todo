@@ -18,7 +18,7 @@ const removeItem = (item)=>{
           <li
             onClick={ selectTask ? () => (selectTask(item)) : null}
             key={index}
-            className={classNames(item.className, { active: selectedTask && selectedTask.id === item.id })}
+            className={classNames(item.className, { active: item.active ? item.active : selectedTask && selectedTask.id === item.id })}
           >
             <i>
               {" "}

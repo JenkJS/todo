@@ -53,10 +53,47 @@ function App() {
         return item;
       });
       setListItem(updateList);
-      axios.delete('http://localhost:3001/tasks/' + taskId).catch(()=>(
-        alert('Err')
-      ))
+      axios
+        .delete("http://localhost:3001/tasks/" + taskId)
+        .catch(() => alert("Err"));
     }
+  };
+
+  const editTask = (listId, taskId, titleTask) => {
+    const updateList = listItem.map((item) => {
+      if (item.id === listId) {
+        item.tasks.map((task) => {
+          if (task.id === taskId) {
+            task.text = titleTask;
+          }
+          return task
+        });
+      }
+      return item;
+    });
+    setListItem(updateList);
+  };
+  const onCheckedTask = (listId, taskId, completed) => {
+    const updateList = listItem.map((item) => {
+      if (item.id === listId) {
+        item.tasks.map((task) => {
+          if (task.id === taskId) {
+            task.completed = completed;
+            console.log(task.completed);
+          }
+          return task;
+        });
+      }
+      return item;
+    });
+    setListItem(updateList);
+    axios
+      .patch("http://localhost:3001/tasks/" + taskId, {
+        completed,
+      })
+      .catch(() => {
+        alert("Error");
+      });
   };
 
   const newTaskItem = (obj) => {
@@ -70,12 +107,12 @@ function App() {
   };
 
   useEffect(() => {
-    const listId = history.location.pathname.split("lists/")[1];
+    const listId = location.pathname.split("lists/")[1];
     if (listItem) {
       const list = listItem.find((list) => list.id === Number(listId));
       setSelectTask(list);
     }
-  }, [listItem, history.location.pathname]);
+  }, [listItem, location.pathname]);
 
   return (
     <div className="todo">
@@ -86,7 +123,7 @@ function App() {
           }}
           items={[
             {
-              active: history.location.pathname === "/",
+              active: !selectedTask,
               icon: (
                 <svg
                   width="14"
@@ -127,22 +164,26 @@ function App() {
           {listItem &&
             listItem.map((items) => (
               <ToDoList
+                editTask={editTask}
                 key={items.id}
                 removeTask={removeTask}
                 newTaskItem={newTaskItem}
                 list={items}
                 editTitle={editedTitle}
                 isEmpty
+                onCheckedTask={onCheckedTask}
               />
             ))}
         </Route>
         <Route path="/lists/:id">
           {selectedTask && (
             <ToDoList
+              editTask={editTask}
               removeTask={removeTask}
               newTaskItem={newTaskItem}
               list={selectedTask}
               editTitle={editedTitle}
+              onCheckedTask={onCheckedTask}
             />
           )}
         </Route>

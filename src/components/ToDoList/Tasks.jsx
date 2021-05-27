@@ -1,10 +1,26 @@
+import axios from "axios";
 import React from "react";
 
-function Tasks({ item, onRemove, list }) {
+function Tasks({ item, onRemove, list, onEdit, onChecked }) {
+
+  const editTask = ()=>{const newTaskName = window.prompt("Task name", item.text)
+if(newTaskName) {
+  onEdit(list.id, item.id, newTaskName)}
+
+  axios.patch('http://localhost:3001/tasks/' + item.id, {
+    text: newTaskName
+  }).catch(()=>{
+    alert("Error")
+  })
+}
+const checkTask = (e) => {
+  onChecked(list.id, item.id, e.target.checked)
+}
+
   return (
     <div key={item.id} className="tasks__list-items">
       <div className="checkbox">
-        <input id={`task-${item.id}`} type="checkbox" />
+        <input onChange={checkTask} id={`task-${item.id}`} type="checkbox" checked={item.completed}/>
         <label htmlFor={`task-${item.id}`}>
           <svg
             width="11"
@@ -25,7 +41,7 @@ function Tasks({ item, onRemove, list }) {
       </div>
       <input readOnly value={item.text} />
       <div className="tasks__list-items-actions">
-        <div>
+        <div onClick={editTask}>
           <svg
             width="15"
             height="15"

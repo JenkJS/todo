@@ -2,125 +2,51 @@
   "lists": [
     {
       "id": 2,
-      "name": "Rect",
-      "colorId": 4
+      "name": "SkillUP",
+      "colorId": 4,
+      "completed": true
     },
     {
       "id": 3,
-      "name": "Фильмы и сериалы",
+      "name": "English",
       "colorId": 3
     },
     {
       "name": "Спорт",
       "colorId": 3,
       "id": 6
-    },
-    {
-      "name": "Курс по ReactJS ToDo",
-      "colorId": 7,
-      "id": 7
-    },
-    {
-      "name": "ddd",
-      "colorId": 1,
-      "id": 9
-    },
-    {
-      "name": "вава",
-      "colorId": 2,
-      "id": 10
     }
   ],
   "tasks": [
     {
-      "id": 1,
-      "listId": 2,
-      "text": "Изучить JavaScript",
-      "completed": true
-    },
-    {
-      "id": 2,
-      "listId": 2,
-      "text": "Изучить паттерны проектирования",
-      "completed": false
-    },
-    {
       "id": 3,
       "listId": 2,
-      "text": "ReactJS Hooks (useState, useReducer, useEffect и т.д.)",
+      "text": "React.JS",
       "completed": true
-    },
-    {
-      "id": 4,
-      "listId": 2,
-      "text": "Redux (redux-observable, redux-saga)",
-      "completed": false
     },
     {
       "id": 1,
       "listId": 3,
-      "text": "Изучить JavaScript",
-      "completed": true
+      "text": "Duolingo",
+      "completed": false
     },
     {
       "id": 2,
       "listId": 3,
-      "text": "Изучить паттерны проектирования",
-      "completed": false
-    },
-    {
-      "listId": 7,
-      "text": "Сделали сайдбар",
-      "completed": true,
-      "id": 15
-    },
-    {
-      "listId": 7,
-      "text": "Сделали список задач",
-      "completed": true,
-      "id": 16
-    },
-    {
-      "listId": 7,
-      "text": "Сделали удаление и редактирование задач и списков",
-      "completed": true,
-      "id": 17
-    },
-    {
-      "listId": 2,
-      "text": "dd",
-      "completed": false,
-      "id": 18
-    },
-    {
-      "listId": 2,
-      "text": "dd",
-      "completed": false,
-      "id": 19
-    },
-    {
-      "listId": 2,
-      "text": "dd",
-      "completed": false,
-      "id": 20
+      "text": "Repeat words",
+      "completed": true
     },
     {
       "listId": 6,
-      "text": "rtrt",
+      "text": "Final The Champions Legua 29 May 2021",
       "completed": false,
       "id": 23
     },
     {
-      "listId": 6,
-      "text": "rвава",
-      "completed": false,
-      "id": 24
-    },
-    {
       "listId": 2,
-      "text": "fdf",
-      "completed": false,
-      "id": 25
+      "text": "Redux",
+      "completed": true,
+      "id": 27
     }
   ],
   "colors": [
